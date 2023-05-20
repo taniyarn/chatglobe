@@ -9,12 +9,14 @@ class Circle extends StatefulWidget {
     required this.secondaryColor,
     required this.rotateRadians,
     required this.radius,
+    this.isBackground = false,
   }) : super(key: key);
 
   final Color primaryColor;
   final Color secondaryColor;
   final double rotateRadians;
   final double radius;
+  final bool isBackground;
 
   @override
   State<Circle> createState() => _CircleState();
@@ -24,12 +26,14 @@ class _CircleState extends State<Circle> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      size: Size.infinite,
+      size:
+          widget.isBackground ? Size.infinite : Size.fromRadius(widget.radius),
       painter: CirclePainter(
         primaryColor: widget.primaryColor,
         secondaryColor: widget.secondaryColor,
         radius: widget.radius,
         rotateRadians: widget.rotateRadians,
+        isBackground: widget.isBackground,
       ),
     );
   }
@@ -41,19 +45,21 @@ class CirclePainter extends CustomPainter {
     required this.secondaryColor,
     required this.radius,
     required this.rotateRadians,
+    required this.isBackground,
   });
 
   final Color primaryColor;
   final Color secondaryColor;
   final double radius;
   final double rotateRadians;
+  final bool isBackground;
 
   final x = sqrt2;
 
   @override
   void paint(Canvas canvas, Size size) {
     var center = Offset(size.width / 2, size.height / 2);
-
+    final _radius = isBackground ? radius : size.width / 2;
     for (var sigma in [
       5.0,
       10.0,
@@ -64,20 +70,20 @@ class CirclePainter extends CustomPainter {
       _drawShader(
           canvas: canvas,
           center: center,
-          radius: radius,
+          radius: _radius,
           primaryColor: primaryColor,
           secondaryColor: secondaryColor,
           rotateRadians: rotateRadians,
-          sigma: sigma * radius / 1000);
+          sigma: sigma * _radius / 1000);
     }
 
     final ringPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.stroke
-      ..strokeWidth = radius / 15
+      ..strokeWidth = _radius / 15
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.0);
 
-    canvas.drawCircle(center, radius, ringPaint);
+    canvas.drawCircle(center, _radius, ringPaint);
   }
 
   static void _drawShader({
