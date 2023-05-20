@@ -210,6 +210,7 @@ class _ChatPageState extends State<ChatPage>
                   secondaryColor: _secondaryColorAnimation.value!,
                   rotateRadians: -1.0 / 4.0 * pi,
                   radius: clampDouble(radius, 0, 1000),
+                  isBackground: true,
                 );
               },
             ),
