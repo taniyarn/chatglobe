@@ -1,17 +1,15 @@
 import 'package:chatglobe/route/route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
   usePathUrlStrategy();
 
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_KEY']!,
+    url: const String.fromEnvironment("SUPABASE_URL"),
+    anonKey: const String.fromEnvironment("SUPABASE_KEY"),
   );
   runApp(const MyApp());
 }
